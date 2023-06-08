@@ -7,11 +7,12 @@
         <div class="wrap">
           <div class="amount">
             <label>Количество</label>
-            <input type="text" />
+            <Input v-model="amount" />
           </div>
           <div class="from">
             <label>Есть</label>
-            <input type="text" />
+            <Input @input="search" v-model="value1" />
+            <Currencies class="currency-wrap" :currencies="currencies" />
           </div>
 
           <span>
@@ -30,7 +31,8 @@
 
           <div class="to">
             <label>Хочу</label>
-            <input type="text" />
+            <Input @input="search" v-model="value2" />
+            <Currencies class="currency-wrap" :currencies="currencies" />
           </div>
         </div>
 
@@ -40,6 +42,27 @@
   </main>
 </template>
 
+<script setup>
+import Input from "@/components/shared/Input.vue"
+import Currencies from "@/components/shared/Currencies.vue"
+
+import getCurrency from "@/composables/getCurrency"
+
+import { computed, ref } from "vue"
+
+const { currencies, getApi } = getCurrency()
+
+getApi()
+
+const amount = ref("")
+const value1 = ref("")
+const value2 = ref("")
+
+const search = computed(() => {
+  return currencies.value.filter((c) => {})
+})
+</script>
+
 <style lang="scss">
 @import "@/globals";
 .app {
@@ -47,7 +70,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 
   h1 {
     margin-bottom: 4rem;
@@ -96,18 +119,38 @@
         }
 
         .from {
+          position: relative;
+          input {
+            &:focus ~ .currency-wrap {
+              display: block;
+            }
+          }
         }
 
         .to {
+          position: relative;
+          input {
+            &:focus ~ .currency-wrap {
+              display: block;
+            }
+          }
+        }
+
+        .currency-wrap {
+          position: absolute;
+          top: 6.4rem;
+          display: none;
         }
 
         span {
           display: flex;
-          align-self: flex-end;
+          align-self: flex-start;
+          margin-top: 2.4rem;
           padding: 1rem;
           border-radius: 30rem;
           border: 1px solid currentColor;
           transition: all 0.15s ease;
+
           &:hover {
             background-color: $color-main;
             border-color: $color-main;
