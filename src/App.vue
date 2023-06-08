@@ -3,17 +3,17 @@
     <h1>Конвертер валют</h1>
 
     <div class="container">
-      <form class="form" @submit.prevent="">
+      <form class="form">
         <div class="wrap">
-          <div class="amount">
-            <label>Количество</label>
-            <Input v-model="amount" />
-          </div>
-          <div class="from">
-            <label>Есть</label>
-            <Input @input="search" v-model="value1" />
-            <Currencies class="currency-wrap" :currencies="currencies" />
-          </div>
+          <Input label="Количество" />
+
+          <Input
+            @update:selected="handleUpdate"
+            v-model="value1"
+            label="С"
+            @focus="show1 = true"
+            :currencies="currencies"
+          />
 
           <span>
             <svg
@@ -29,38 +29,40 @@
             </svg>
           </span>
 
-          <div class="to">
-            <label>Хочу</label>
-            <Input @input="search" v-model="value2" />
-            <Currencies class="currency-wrap" :currencies="currencies" />
-          </div>
+          <Input
+            @focus="show2 = true"
+            @update:selected="handleUpdate"
+            v-model="value2"
+            label="В"
+            :currencies="currencies"
+          />
         </div>
 
-        <button type="submit">Конвертировать</button>
+        <button>Конвертировать</button>
       </form>
+
+      hehe
     </div>
   </main>
 </template>
 
 <script setup>
-import Input from "@/components/shared/Input.vue"
-import Currencies from "@/components/shared/Currencies.vue"
-
+import { ref } from "vue"
 import getCurrency from "@/composables/getCurrency"
 
-import { computed, ref } from "vue"
+import Input from "@/components/shared/Input.vue"
 
 const { currencies, getApi } = getCurrency()
-
 getApi()
 
-const amount = ref("")
 const value1 = ref("")
 const value2 = ref("")
 
-const search = computed(() => {
-  return currencies.value.filter((c) => {})
-})
+const handleUpdate = (payload, label) => {
+  if (label == "С") value1.value = payload
+  else if (label == "В") value2.value = payload
+  return
+}
 </script>
 
 <style lang="scss">
@@ -68,9 +70,11 @@ const search = computed(() => {
 .app {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
+  padding: 15rem 5rem;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
+  box-sizing: border-box;
 
   h1 {
     margin-bottom: 4rem;
@@ -80,67 +84,18 @@ const search = computed(() => {
   .container {
     width: 80%;
     margin: 0 auto;
+    background-color: $color-main-2;
+    padding: 2rem 3rem;
+    border-radius: 6px;
+
     .form {
       display: flex;
       gap: 3rem;
       flex-direction: column;
-      background-color: $color-main-2;
-      padding: 2rem 3rem;
-      border-radius: 6px;
+
       .wrap {
         display: flex;
         gap: 1rem;
-        label {
-          font-size: 1.4rem;
-          font-weight: 500;
-        }
-
-        input {
-          all: unset;
-          border-radius: 6px;
-          padding: 6px;
-          border: 1px solid $color-text;
-
-          &:focus {
-            border: 1px solid $color-main;
-          }
-        }
-
-        .amount,
-        .from,
-        .to {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          flex-grow: 1;
-        }
-
-        .amount {
-        }
-
-        .from {
-          position: relative;
-          input {
-            &:focus ~ .currency-wrap {
-              display: block;
-            }
-          }
-        }
-
-        .to {
-          position: relative;
-          input {
-            &:focus ~ .currency-wrap {
-              display: block;
-            }
-          }
-        }
-
-        .currency-wrap {
-          position: absolute;
-          top: 6.4rem;
-          display: none;
-        }
 
         span {
           display: flex;

@@ -7,7 +7,7 @@ const getCurrency = () => {
       "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies.json"
     )
     const data = await response.json()
-    if (data) currencies.value = data
+    currencies.value = data
   }
 
   return { currencies, getApi }

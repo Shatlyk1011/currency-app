@@ -1,6 +1,11 @@
 <template>
   <div class="currencies">
-    <div class="currency" v-for="currency in currencies" :key="currency">
+    <div
+      @click="emitUpdate(currency)"
+      class="currency"
+      v-for="currency in currencies"
+      :key="currency"
+    >
       {{ currency }}
     </div>
   </div>
@@ -9,9 +14,16 @@
 <script setup>
 defineProps({
   currencies: {
+    type: String,
     required: true,
   },
 })
+
+const emit = defineEmits(["update:selected"])
+
+const emitUpdate = (val) => {
+  emit("update:selected", val)
+}
 </script>
 
 <style lang="scss">
