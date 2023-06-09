@@ -73,7 +73,6 @@ const handleSelected = (payload) => {
   flex-direction: column;
   gap: 1rem;
   position: relative;
-  flex-grow: 1;
 
   label {
     font-size: 1.4rem;

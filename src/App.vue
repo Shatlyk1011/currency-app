@@ -3,7 +3,7 @@
     <h1>Конвертер валют</h1>
 
     <div class="container">
-      <form class="form">
+      <form class="form" @submit.prevent="handleSubmit">
         <div class="wrap">
           <Input label="Количество" />
 
@@ -38,7 +38,7 @@
           />
         </div>
 
-        <button>Конвертировать</button>
+        <button type="submit">Конвертировать</button>
       </form>
 
       hehe
@@ -47,21 +47,42 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, isProxy, toRaw } from "vue"
 import getCurrency from "@/composables/getCurrency"
+import axios from "axios"
 
 import Input from "@/components/shared/Input.vue"
 
 const { currencies, getApi } = getCurrency()
 getApi()
 
-const value1 = ref("")
-const value2 = ref("")
+const value1 = ref(null)
+const value2 = ref(null)
 
 const handleUpdate = (payload, label) => {
   if (label == "С") value1.value = payload
   else if (label == "В") value2.value = payload
-  return
+}
+
+const handleSubmit = () => {
+  let obj = currencies.value
+
+  let from = null
+  let to = null
+  for (let key in obj) {
+    if (obj[key] == value1.value) from = key
+    if (obj[key] == value2.value) to = key
+  }
+
+  console.log(from, to)
+
+  if (from && to) {
+    let url = `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${from}/${to}.json`
+
+    axios.get(url).then((res) => {
+      console.log(res.data)
+    })
+  }
 }
 </script>
 
@@ -82,7 +103,7 @@ const handleUpdate = (payload, label) => {
   }
 
   .container {
-    width: 80%;
+    max-width: 80rem;
     margin: 0 auto;
     background-color: $color-main-2;
     padding: 2rem 3rem;
