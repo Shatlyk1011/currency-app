@@ -8,7 +8,6 @@
         :type="type"
         :value="modelValue"
         @input="handleInput"
-        ref="input"
       />
 
       <div class="currencies" v-if="currencies && show">
@@ -26,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 
 import { OnClickOutside } from "@vueuse/components"
 
@@ -52,13 +51,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["update:selected", "update:modelValue"])
-const input = ref(null)
+const show = ref(false)
 
 const handleInput = (e) => {
   emit("update:modelValue", e.target.value)
 }
-
-const show = ref(false)
 
 const handleSelected = (payload) => {
   emit("update:selected", payload, props.label)
