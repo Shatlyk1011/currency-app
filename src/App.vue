@@ -5,7 +5,7 @@
     <div class="container">
       <form class="form" @submit.prevent="handleSubmit">
         <div class="wrap">
-          <Input label="Количество" v-model="amount" />
+          <Input label="Количество" v-model="amount" type="number" />
 
           <Input
             @update:selected="handleUpdate"
@@ -42,7 +42,7 @@
 
         <div class="result" v-if="result">
           <div class="p">
-            <div class="from">{{ amount }} {{ value1 }}</div>
+            <div class="from">{{ Math.abs(amount) }} {{ value1 }}</div>
             = <br />
 
             <div class="to">{{ result }} {{ value2 }}</div>
@@ -140,7 +140,9 @@ const handleSubmit = () => {
 
     axios.get(url).then((res) => {
       if (res.data) {
-        result.value = amount.value ? res.data[to] * amount.value : res.data[to]
+        result.value = amount.value
+          ? res.data[to] * Math.abs(amount.value)
+          : res.data[to]
         date.value = res.data.date
       }
     })
@@ -150,9 +152,7 @@ const handleSubmit = () => {
 }
 
 watch([value1, value2, amount], () => {
-  if (value1.value && value2.value) {
-    handleSubmit()
-  }
+  if (value1.value && value2.value) handleSubmit()
 })
 </script>
 
