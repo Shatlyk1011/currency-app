@@ -12,7 +12,7 @@
 
       <div class="currencies" v-if="currencies && show">
         <div
-          @click="handleSelected(currency)"
+          @click="handleSelected(currency), (show = false)"
           class="currency"
           v-for="currency in currencies"
           :key="currency"
@@ -60,6 +60,10 @@ const handleInput = (e) => {
 const handleSelected = (payload) => {
   emit("update:selected", payload, props.label)
 }
+
+const currencies2 = computed(() => {
+  curr = props.currencies
+})
 </script>
 
 <style lang="scss">

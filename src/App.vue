@@ -12,7 +12,7 @@
             v-model.trim.lazy="value1"
             label="У меня есть"
             @focus="show1 = true"
-            :currencies="currencies"
+            :currencies="computedCurrencies1"
           />
 
           <span @click="changeValues">
@@ -34,7 +34,7 @@
             @update:selected="handleUpdate"
             v-model.trim.lazy="value2"
             label="Хочу приобрести"
-            :currencies="currencies"
+            :currencies="computedCurrencies2"
           />
         </div>
 
@@ -43,12 +43,12 @@
         <div class="result" v-if="result">
           <div class="p">
             <div class="from">{{ amount }} {{ value1 }}</div>
-            равен <br />
+            = <br />
 
             <div class="to">{{ result }} {{ value2 }}</div>
           </div>
 
-          <div class="date">Дата: {{ date }}</div>
+          <div class="date">На момент: {{ date }}</div>
         </div>
       </form>
     </div>
@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
+import { ref, watch, computed } from "vue"
 import getCurrency from "@/composables/getCurrency"
 import axios from "axios"
 
@@ -82,6 +82,15 @@ const date = ref(null)
 
 const error = ref(null)
 
+let currenciesArray = computed(() => {
+  let curr = currencies.value
+  let arr = []
+  for (let key in currencies.value) {
+    arr.push(curr[key])
+  }
+  return arr
+})
+
 const changeValues = () => {
   let val1 = value1.value
   let val2 = value2.value
@@ -93,6 +102,24 @@ const handleUpdate = (payload, label) => {
   if (label == "У меня есть") value1.value = payload
   else if (label == "Хочу приобрести") value2.value = payload
 }
+
+const computedCurrencies1 = computed(() => {
+  if (value1.value) {
+    return currenciesArray.value.filter((c) => {
+      return c.toLowerCase().includes(value1.value.toLowerCase())
+    })
+  }
+  return currenciesArray.value
+})
+
+const computedCurrencies2 = computed(() => {
+  if (value2.value) {
+    return currenciesArray.value.filter((c) => {
+      return c.toLowerCase().includes(value2.value.toLowerCase())
+    })
+  }
+  return currenciesArray.value
+})
 
 const handleSubmit = () => {
   let obj = currencies.value
@@ -193,7 +220,7 @@ watch([value1, value2, amount], () => {
 
           .to {
             font-weight: 500;
-            font-size: 2.4rem;
+            font-size: 3rem;
           }
         }
         .date {
@@ -201,6 +228,7 @@ watch([value1, value2, amount], () => {
           display: inline-block;
           font-size: 1.2rem;
           font-weight: 600;
+          color: rgba($color-text, 0.6);
         }
       }
 
