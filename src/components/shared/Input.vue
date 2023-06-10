@@ -1,5 +1,5 @@
 <template>
-  <OnClickOutside @trigger="show = false">
+  <OnClickOutside @trigger="show = false" :key="label">
     <div class="input-wrap">
       <label>{{ label }}</label>
       <input
