@@ -162,7 +162,7 @@ watch([value1, value2, amount], () => {
   display: flex;
   flex-direction: column;
   justify-content: start;
-  padding: 15rem 5rem;
+  padding: 10rem 5rem;
   align-items: center;
   height: 100vh;
   box-sizing: border-box;

@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue"
+import { ref } from "vue"
 
 import { OnClickOutside } from "@vueuse/components"
 
@@ -53,17 +53,10 @@ const props = defineProps({
 const emit = defineEmits(["update:selected", "update:modelValue"])
 const show = ref(false)
 
-const handleInput = (e) => {
-  emit("update:modelValue", e.target.value)
-}
+const handleInput = (e) => emit("update:modelValue", e.target.value)
 
-const handleSelected = (payload) => {
+const handleSelected = (payload) =>
   emit("update:selected", payload, props.label)
-}
-
-const currencies2 = computed(() => {
-  curr = props.currencies
-})
 </script>
 
 <style lang="scss">
