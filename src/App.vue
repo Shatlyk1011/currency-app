@@ -45,7 +45,7 @@
             <div class="from">{{ Math.abs(amount) }} {{ value1 }}</div>
             = <br />
 
-            <div class="to">{{ result }} {{ value2 }}</div>
+            <div class="to">{{ result.toFixed(3) }} {{ value2 }}</div>
           </div>
 
           <div class="date">На момент: {{ date }}</div>
